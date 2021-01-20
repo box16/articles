@@ -50,3 +50,5 @@ class D2V():
             return None
         except IndexError:  # かなりunder idの時にIndexError
             return None
+        except AttributeError: # modelが見つからない時
+            return None
