@@ -43,18 +43,20 @@ def find_similer_articles(base_id, id_only=True):
     else:
         return similer_article
 
-def make_context_for_detail_view(article_id,notice_message):
+
+def make_context_for_detail_view(article_id, notice_message):
     """voteでexceptionが発生した際に、DetailViewを再描画する"""
 
     similar_articles_id = find_similer_articles(article_id)
     similar_articles = Article.objects.filter(id__in=similar_articles_id)
 
     context = {
-        'article' : Article.objects.get(pk=article_id),
+        'article': Article.objects.get(pk=article_id),
         'notice_message': notice_message,
         'similar_articles': similar_articles
     }
     return context
+
 
 def vote(request, article_id):
     try:
@@ -63,7 +65,7 @@ def vote(request, article_id):
         return render(
             request,
             'articles/detail.html',
-            make_context_for_detail_view(article_id,"好みが選択されずに登録ボタンが押されました")
+            make_context_for_detail_view(article_id, "好みが選択されずに登録ボタンが押されました")
         )
 
     try:
@@ -77,15 +79,15 @@ def vote(request, article_id):
                 add_score *
                 similality) for id,
             similality in similer_article]
-    except Interest.DoesNotExist:# 登録されていない記事に対して処理を行おうとした
+    except Interest.DoesNotExist:  # 登録されていない記事に対して処理を行おうとした
         return render(
             request,
             'articles/detail.html',
-            make_context_for_detail_view(article_id,"好み登録に失敗しました")
+            make_context_for_detail_view(article_id, "好み登録に失敗しました")
         )
 
     update_list = [(base_interest, add_score)] + similer_interest
-    
+
     for interest, score in update_list:
         interest.interest_index += score
         interest.save()
@@ -93,4 +95,4 @@ def vote(request, article_id):
         return HttpResponseRedirect(
             reverse(
                 'articles:index')
-            )
+        )
