@@ -20,7 +20,9 @@ class MyCorpus():
 
 class D2V():
     def __init__(self):
-        self.path = os.path.join(os.path.dirname(__file__),"../static/articles/")
+        self.path = os.path.join(
+            os.path.dirname(__file__),
+            "../static/articles/")
         try:
             self.model = Doc2Vec.load(self.path + "d2v.model")
         except FileNotFoundError:
@@ -50,5 +52,5 @@ class D2V():
             return None
         except IndexError:  # かなりunder idの時にIndexError
             return None
-        except AttributeError: # modelが見つからない時
+        except AttributeError:  # modelが見つからない時
             return None
