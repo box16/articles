@@ -54,7 +54,6 @@ def make_context_for_detail_view(article_id,notice_message):
         'notice_message': notice_message,
         'similar_articles': similar_articles
     }
-
     return context
 
 def vote(request, article_id):
@@ -88,7 +87,7 @@ def vote(request, article_id):
 
         return HttpResponseRedirect(
             reverse(
-                'articles:index'))
+                'articles:detail'))
     except Interest.DoesNotExist:
         return render(
             request,
