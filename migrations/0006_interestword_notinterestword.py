@@ -13,15 +13,29 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='InterestWord',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('word', models.TextField(unique=True)),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
+                ('word',
+                 models.TextField(
+                     unique=True)),
             ],
         ),
         migrations.CreateModel(
             name='NotInterestWord',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('word', models.TextField(unique=True)),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
+                ('word',
+                 models.TextField(
+                     unique=True)),
             ],
         ),
     ]

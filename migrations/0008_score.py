@@ -14,9 +14,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Score',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.IntegerField(default=50)),
-                ('article', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='articles.article')),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
+                ('score',
+                 models.IntegerField(
+                     default=50)),
+                ('article',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     to='articles.article')),
             ],
         ),
     ]
