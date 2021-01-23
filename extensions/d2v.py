@@ -20,7 +20,7 @@ class MyCorpus():
 
 class D2V():
     def __init__(self):
-        self.path = os.environ.get("CORPUSDIR")
+        self.path = os.path.join(os.path.dirname(__file__),"../static/articles/")
         try:
             self.model = Doc2Vec.load(self.path + "d2v.model")
         except FileNotFoundError:
