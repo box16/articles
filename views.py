@@ -44,25 +44,33 @@ def find_similer_articles(base_id, id_only=True):
         return similer_article
 
 
+def make_context_for_detail_view(article_id, notice_message):
+    """voteでexceptionが発生した際に、DetailViewを再描画する"""
+
+    similar_articles_id = find_similer_articles(article_id)
+    similar_articles = Article.objects.filter(id__in=similar_articles_id)
+
+    context = {
+        'article': Article.objects.get(pk=article_id),
+        'notice_message': notice_message,
+        'similar_articles': similar_articles
+    }
+    return context
+
+
 def vote(request, article_id):
     try:
-        base_interest = get_object_or_404(Interest, article_id=article_id)
         add_score = 1 if (request.POST["preference"] == "like") else -1
-        update_list = [(base_interest, add_score)]
     except KeyError:  # ボタンが入力されずにsubmitされた
         return render(
             request,
             'articles/detail.html',
-            {
-                'article': Article.objects.get(
-                    pk=article_id),
-                'notice_message': "好みが選択されずに登録ボタンが押されました",
-                'similar_articles': Article.objects.in_bulk(
-                    find_similer_articles(article_id))
-            }
+            make_context_for_detail_view(article_id, "好みが選択されずに登録ボタンが押されました")
         )
 
     try:
+        base_interest = get_object_or_404(Interest, article_id=article_id)
+
         similer_article = find_similer_articles(article_id, id_only=False)
         similer_interest = [
             (get_object_or_404(
@@ -71,25 +79,20 @@ def vote(request, article_id):
                 add_score *
                 similality) for id,
             similality in similer_article]
-
-        update_list = update_list + similer_interest
-
-        for interest, score in update_list:
-            interest.interest_index += score
-            interest.save()
-
-        return HttpResponseRedirect(
-            reverse(
-                'articles:index'))
-    except Interest.DoesNotExist:
+    except Interest.DoesNotExist:  # 登録されていない記事に対して処理を行おうとした
         return render(
             request,
             'articles/detail.html',
-            {
-                'article': Article.objects.get(
-                    pk=article_id),
-                'notice_message': "好み登録に失敗しました",
-                'similar_articles': Article.objects.in_bulk(
-                    find_similer_articles(article_id))
-            }
+            make_context_for_detail_view(article_id, "好み登録に失敗しました")
+        )
+
+    update_list = [(base_interest, add_score)] + similer_interest
+
+    for interest, score in update_list:
+        interest.interest_index += score
+        interest.save()
+
+        return HttpResponseRedirect(
+            reverse(
+                'articles:index')
         )
